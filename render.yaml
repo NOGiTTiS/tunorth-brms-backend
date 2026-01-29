@@ -1,0 +1,10 @@
+services:
+  # Backend Service
+  - type: web
+    name: tunorth-brms-render-backend
+    runtime: docker
+    dockerfilePath: ./Dockerfile
+    dockerContext: .
+    region: singapore
+    healthCheckPath: /health
+    

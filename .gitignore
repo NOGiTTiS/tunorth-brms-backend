@@ -1,0 +1,14 @@
+# ไฟล์ชั่วคราวของ Air
+tmp/
+.air.toml
+
+# ไฟล์ environment (ห้ามหลุดขึ้น git เด็ดขาด)
+.env
+
+# โฟลเดอร์ IDE (ถ้ามี)
+.vscode/
+.idea/
+
+# Uploads
+uploads/
+*.log

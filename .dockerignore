@@ -1,0 +1,25 @@
+# Git
+.git
+.gitignore
+
+# Go
+bin/
+main
+*.exe
+*.test
+vendor/
+
+# Environment
+.env
+
+# Docker
+Dockerfile
+docker-compose.yml
+render.yaml
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Fiber Uploads (Assuming we use Cloudinary in prod, but ignore local uploads)
+uploads/
