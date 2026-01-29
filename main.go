@@ -3,7 +3,7 @@ package main
 import (
 	"log"
 	"os"
-	"tunorth-brms-backend/internal/bootstrap"
+	"tunorth-brms-backend/pkg/bootstrap"
 )
 
 func main() {

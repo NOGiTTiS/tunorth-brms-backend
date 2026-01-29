@@ -2,7 +2,7 @@ package handler
 
 import (
 	"net/http"
-	"tunorth-brms-backend/internal/bootstrap"
+	"tunorth-brms-backend/pkg/bootstrap"
 
 	"github.com/gofiber/adaptor/v2"
 	"github.com/gofiber/fiber/v2"
