@@ -13,7 +13,13 @@ var app *fiber.App
 
 func Handler(w http.ResponseWriter, r *http.Request) {
 	if app == nil {
-		app = bootstrap.CreateApp()
+		var err error
+		app, err = bootstrap.CreateApp()
+		if err != nil {
+			w.WriteHeader(http.StatusInternalServerError)
+			w.Write([]byte("Failed to initialize app: " + err.Error()))
+			return
+		}
 	}
 	
 	adaptor.FiberApp(app).ServeHTTP(w, r)

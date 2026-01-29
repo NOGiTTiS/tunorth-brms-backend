@@ -15,14 +15,14 @@ import (
 	"github.com/joho/godotenv"
 )
 
-func CreateApp() *fiber.App {
+func CreateApp() (*fiber.App, error) {
 	// 1. Setup Config
 	if err := godotenv.Load(); err != nil {
-		log.Println("Warning: .env file not found")
+		log.Println("Warning: .env file not found (This is normal in production if using Env Vars)")
 	}
 
 	// 2. Setup Database Connection
-	database := storage.NewDatabase(
+	database, err := storage.NewDatabase(
 		os.Getenv("DB_HOST"),
 		os.Getenv("DB_USER"),
 		os.Getenv("DB_PASSWORD"),
@@ -30,6 +30,9 @@ func CreateApp() *fiber.App {
 		os.Getenv("DB_PORT"),
 		os.Getenv("DB_SSL"),
 	)
+	if err != nil {
+		return nil, err
+	}
 
 	// 3. Dependency Injection
 	// DB -> Repository -> Service -> Handler
@@ -79,9 +82,13 @@ func CreateApp() *fiber.App {
 
 	// Auto-Migrate & Initialize Defaults
 	// Note: NewDatabase already does most migrations, but we keep this to ensure consistency with original main.go
-	database.DB.AutoMigrate(&domain.Setting{}, &domain.Booking{}, &domain.Log{})
-	settingService.InitializeDefaults()
-	userService.InitializeDefaultAdmin()
+	if err := database.DB.AutoMigrate(&domain.Setting{}, &domain.Booking{}, &domain.Log{}); err != nil {
+		log.Println("Warning: AutoMigrate failed:", err)
+		// Don't fail hard on migration error, might be permission issue
+	}
+	
+	go settingService.InitializeDefaults() // Run in background to avoid blocking
+	go userService.InitializeDefaultAdmin() // Run in background
 
 	// 4. Setup Fiber App
 	app := fiber.New(fiber.Config{
@@ -97,7 +104,10 @@ func CreateApp() *fiber.App {
 	}))
 
 	// Static files (Verify if this works in serverless, typically Vercel handles static files separately)
-	app.Static("/uploads", "./uploads")
+	// Only serve if directory exists to avoid error
+	if _, err := os.Stat("./uploads"); err == nil {
+		app.Static("/uploads", "./uploads")
+	}
 
 	// 5. Routes Definition
 	api := app.Group("/api")
@@ -165,5 +175,5 @@ func CreateApp() *fiber.App {
 		return c.SendString("TUNorth-BRMS API is Running!")
 	})
 
-	return app
+	return app, nil
 }

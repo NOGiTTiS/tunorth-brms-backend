@@ -7,7 +7,10 @@ import (
 )
 
 func main() {
-	app := bootstrap.CreateApp()
+	app, err := bootstrap.CreateApp()
+	if err != nil {
+		log.Fatal(err)
+	}
 
 	// Start Server
 	port := os.Getenv("PORT")
