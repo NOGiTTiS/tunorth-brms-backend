@@ -90,7 +90,11 @@ func CreateApp() *fiber.App {
 
 	// Middleware
 	app.Use(logger.New())
-	app.Use(cors.New())
+	app.Use(cors.New(cors.Config{
+		AllowOrigins:     "*",
+		AllowHeaders:     "Origin, Content-Type, Accept, Authorization",
+		AllowMethods:     "GET, POST, HEAD, PUT, DELETE, PATCH, OPTIONS",
+	}))
 
 	// Static files (Verify if this works in serverless, typically Vercel handles static files separately)
 	app.Static("/uploads", "./uploads")
