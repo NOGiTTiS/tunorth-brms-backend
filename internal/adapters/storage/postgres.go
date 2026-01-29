@@ -23,7 +23,8 @@ func NewDatabase(host, user, password, dbName, port, sslMode string) *Database {
 
 	// เชื่อมต่อ DB
 	db, err := gorm.Open(postgres.Open(dsn), &gorm.Config{
-		Logger: logger.Default.LogMode(logger.Info), // ให้แสดง SQL Log เวลาทำงาน
+		Logger:      logger.Default.LogMode(logger.Info), // ให้แสดง SQL Log เวลาทำงาน
+		PrepareStmt: false,                               // ปิด Prepared Statement เพื่อให้ใช้กับ Supabase Transaction Pooler/PgBouncer ได้
 	})
 
 	if err != nil {
