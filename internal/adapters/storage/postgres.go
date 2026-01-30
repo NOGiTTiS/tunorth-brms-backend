@@ -16,7 +16,7 @@ type Database struct {
 
 // NewDatabase ทำหน้าที่เชื่อมต่อ Database และ Return connection กลับไป
 func NewDatabase(host, user, password, dbName, port, sslMode string) (*Database, error) {
-	dsn := fmt.Sprintf("host=%s user=%s password=%s dbname=%s port=%s sslmode=%s TimeZone=Asia/Bangkok",
+	dsn := fmt.Sprintf("host=%s user=%s password=%s dbname=%s port=%s sslmode=%s TimeZone=Asia/Bangkok default_query_exec_mode=simple_protocol",
 		host, user, password, dbName, port, sslMode)
 	
 	log.Println("Connecting to database with DSN:", dsn)
